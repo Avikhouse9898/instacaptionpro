@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>InstaCaptionPro — подписи для Instagram</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-50 text-slate-900">
+  <main class="max-w-3xl mx-auto px-4 py-10">
+    <h1 class="text-3xl font-bold mb-4">InstaCaptionPro</h1>
+    <form id="form" class="space-y-4">
+      <input id="topic" placeholder="Тема фото" class="w-full p-2 border rounded" required />
+      <select id="style" class="w-full p-2 border rounded">
+        <option value="punchy">Коротко и цепко</option>
+        <option value="witty">Остроумно</option>
+        <option value="romantic">Романтично</option>
+        <option value="travel">Путешествия</option>
+        <option value="promo">Продающий пост</option>
+      </select>
+      <select id="lang" class="w-full p-2 border rounded">
+        <option value="ru">Русский</option>
+        <option value="en">English</option>
+      </select>
+      <textarea id="extras" placeholder="Доп. детали" class="w-full p-2 border rounded"></textarea>
+      <button class="bg-indigo-600 text-white px-4 py-2 rounded">Сгенерировать</button>
+    </form>
+    <pre id="result" class="mt-4 p-4 bg-gray-100 rounded"></pre>
+  </main>
+
+  <script>
+    document.getElementById('form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const res = await fetch('/api/codex', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          topic: document.getElementById('topic').value,
+          style: document.getElementById('style').value,
+          lang: document.getElementById('lang').value,
+          extras: document.getElementById('extras').value
+        })
+      });
+      const data = await res.json();
+      document.getElementById('result').textContent = data.text || data.error;
+    });
+  </script>
+</body>
+</html>
